@@ -8,7 +8,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
-import { Navigate, NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 const { Header } = Layout;
 
@@ -22,26 +22,35 @@ export const Navbar = () => {
       window.removeEventListener("scroll", isSticky);
     };
   });
+
+  const navigate = useNavigate();
   const cookies = new Cookies();
-  const cookLogin = cookies.get("Login");
+  const cookLogin = sessionStorage.getItem("_tokenlg");
+  const now = new Date();
+  const item = JSON.parse(cookLogin);
   useEffect(() => {
-    if (cookLogin == null) {
+    if (cookLogin == null || now.getTime() > item.expiry) {
       setUser(false);
+      sessionStorage.removeItem("_tokenlg");
     } else {
       setUser(true);
     }
-  }, [cookLogin]);
+  });
+
   const isSticky = (e) => {
     const header = document.querySelector("#header-section");
     const scrollTop = window.scrollY;
-    scrollTop >= 125
+    scrollTop >= 30
       ? header.classList.add("is-sticky")
       : header.classList.remove("is-sticky");
   };
   function handleMenuClick(e) {
     if (e.key == 1) {
-      cookies.remove("Login", { path: "/" });
+      sessionStorage.removeItem("_tokenlg");
       setUser(false);
+    }
+    if (e.key == 2) {
+      navigate("/login");
     }
   }
   const menu = (
@@ -82,7 +91,11 @@ export const Navbar = () => {
   return (
     <>
       <Layout>
-        <Header style={{ zIndex: 10, width: "100%" }} id="header-section">
+        <Header
+          className="header-main"
+          style={{ zIndex: 99, width: "100%" }}
+          id="header-section"
+        >
           <Row>
             <Col span={2} offset={2}>
               <NavLink to="/">
@@ -118,7 +131,7 @@ export const Navbar = () => {
                     size={30}
                     style={{ color: "white", fontSize: "18px" }}
                   >
-                    Giỏ hàng ({state.length})
+                    ({state.length})
                   </Button>
                 </NavLink>
                 {user ? <OnLoginUser /> : <Login />}

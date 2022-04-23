@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
 import { Button, Checkbox, Col, Form, Input, Layout, message, Row } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -6,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../redux/action";
 import axios from "axios";
 import Cookies from "universal-cookie";
-export function Login() {
+function Login() {
   const username = useRef("username");
   const password = useRef("password");
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ export function Login() {
     password: "",
   });
   const [disable, setDisable] = useState(false);
+  const cookLogin = sessionStorage.getItem("_tokenlg");
+  const now = new Date();
+  const item = JSON.parse(cookLogin);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser({
@@ -24,16 +29,26 @@ export function Login() {
     });
   };
 
-  const handleSubmit = (value) => {
+  //check status login
+  useEffect(() => {
+    if (cookLogin != null && now.getTime() > item.expiry) {
+      sessionStorage.removeItem("_tokenlg");
+    } else if (cookLogin == null) {
+    } else {
+      navigate("/");
+    }
+  }, []);
+  const handleSubmit = () => {
     axios
       .post("http://localhost:5000/user/login", user)
       .then(async (response) => {
         setDisable(true);
         await message.success("Đăng nhập thành công!");
-        cookies.set("Login", response, { path: "/" });
-        console.log("Login success with idUser:" + response);
+
+        // cookies.set("UserInfo", response, { path: "/" });
+        sessionStorage.setItem("_tokenlg", JSON.stringify(response.data));
+        // console.log(response.data.token);
         navigate("/");
-        window.location.reload();
       })
       .catch((err) => {
         message.warn("Sai tài khoản hoặc chưa đăng ký!");
@@ -42,7 +57,7 @@ export function Login() {
   };
 
   return (
-    <>
+    <main>
       <Layout style={{ height: "100vh", margin: "auto" }}>
         <Row justify={"center"} style={{ marginTop: "30px" }}>
           <div className="box-login">
@@ -116,6 +131,7 @@ export function Login() {
           </div>
         </Row>
       </Layout>
-    </>
+    </main>
   );
 }
+export { Login };

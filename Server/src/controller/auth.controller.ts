@@ -2,6 +2,8 @@
 import { Request, Response } from "express";
 import { createHash } from "crypto";
 import { CustomerModel } from "../model/index";
+import jwt from "jsonwebtoken";
+import * as dotenv from "dotenv";
 
 function comparePassword(password: string, userPass: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
@@ -24,13 +26,8 @@ export const postLogin = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({
-        message: "username and password are required",
-      });
-    }
+    const user = await CustomerModel.findOne({ username: username });
 
-    const user = await CustomerModel.findOne({ username });
     if (!user) {
       return res.status(400).json({
         message: "username or password is incorrect",
@@ -43,8 +40,10 @@ export const postLogin = async (req: Request, res: Response) => {
         message: "username or password is incorrect",
       });
     }
-    res.status(200).send(user._id).json({
-      message: "login success",
+    const now = new Date();
+    res.status(202).json({
+      token: generateToken(user._id),
+      expiry: now.getTime() + 1000 * 60 * 30,
     });
   } catch (error) {
     res.status(500).json({ error: error });
@@ -52,16 +51,9 @@ export const postLogin = async (req: Request, res: Response) => {
 };
 
 export const postRegister = async (req: Request, res: Response) => {
-  res.send("xinchao ");
   const { username, password, customerName, phone, email } = req.body;
 
-  if (!username || !password || !customerName || !phone || !email) {
-    return res.status(400).json({
-      message: "username, password, customerName, phone, email are required",
-    });
-  }
-
-  const user = await CustomerModel.findOne({ username });
+  const user = await CustomerModel.findOne({ username: username });
   if (user) {
     return res.status(400).json({
       message: "username is already exist",
@@ -79,7 +71,14 @@ export const postRegister = async (req: Request, res: Response) => {
 
   await newUser.save();
 
-  return res.status(200).json({
+  return res.status(201).json({
     message: "register success",
+  });
+};
+
+//Generate JWT
+const generateToken = (id: any) => {
+  return jwt.sign({ id }, "hyperCamera", {
+    expiresIn: "30m",
   });
 };

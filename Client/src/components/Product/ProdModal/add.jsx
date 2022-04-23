@@ -31,6 +31,7 @@ export function CreateProdModal() {
     prodCate: "",
     prodDesc: "",
   });
+
   const { isShow } = useSelector(modalState$);
   const [img, setImg] = useState([]);
 
@@ -55,7 +56,7 @@ export function CreateProdModal() {
   const CreateProd = (
     <div>
       <Form>
-        <Row gutter={[8, 8]} style={{width:"fit-content"}}>
+        <Row gutter={[8, 8]} style={{ width: "fit-content" }}>
           <Col span={10} style={{ background: "#f7f7f7" }}>
             <div style={{ minHeight: "fit-content", padding: "8px" }}>
               {img.map((e) => {
@@ -85,14 +86,14 @@ export function CreateProdModal() {
                     })
                   }
                 >
-
                   <Select.Option value="Máy ảnh">Máy ảnh</Select.Option>
                   <Select.Option value="Máy quay phim">
                     Máy quay phim
                   </Select.Option>
                   <Select.Option value="Ống kính">Ống kính</Select.Option>
-                  <Select.Option value="Tay cầm">Tay cầm (gimbal)</Select.Option>
-
+                  <Select.Option value="Tay cầm">
+                    Tay cầm (gimbal)
+                  </Select.Option>
                 </Select>
               </Form.Item>
               <Form.Item style={{ margin: "10px" }}>

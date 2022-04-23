@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Layout, Carousel, Divider, Row, Col, Card, Button } from "antd";
-import images from "../api/image";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
@@ -18,20 +17,20 @@ const bannerStyle = {
   height: "300px",
   margin: "0 auto",
 };
-export function Home() {
+function Home() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
-  let componentMounted = true;
-
   const dispatch = useDispatch();
+  const products = useSelector(productsState$);
+  const images = [{ src: "/banner/bg-1.jpg" }, { src: "/banner/bg-2.png" }];
   const addProduct = (product) => {
     dispatch(addCart(product));
   };
-  const products = useSelector(productsState$);
+
   useEffect(() => {
     dispatch(actions.getProducts.getProductsRequest());
-  }, []);
+  }, [dispatch]);
 
   const ShowProducts = () => {
     return (
@@ -39,7 +38,7 @@ export function Home() {
         <Row gutters={16} style={{ justifyContent: "center" }}>
           {products.map((product) => {
             return (
-              <div key={product.id}>
+              <div key={product._id}>
                 <Col span={5} style={{ margin: "10px" }}>
                   <Card
                     hoverable
@@ -113,9 +112,10 @@ export function Home() {
             })}
           </Carousel>
           <Divider orientation="center">Sản phẩm mới nhất</Divider>
-          {loading ? <Loading /> : <ShowProducts />}
+          <ShowProducts />
         </Content>
       </Layout>
     </>
   );
 }
+export { Home };

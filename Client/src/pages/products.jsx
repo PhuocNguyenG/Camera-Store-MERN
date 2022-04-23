@@ -17,23 +17,23 @@ import * as actions from "../redux/action";
 import axios from "axios";
 import * as api from "../api";
 
-export function Products() {
+function Products() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const products = useSelector(productsState$);
 
-  const dispatch = useDispatch();
-
-  //add prod to cart
   const addProduct = (product) => {
     dispatch(addCart(product));
   };
-  //pop-up modal create prod
+
+  //pop-up modal create product
   const openCreateProdModal = React.useCallback(() => {
     dispatch(showModal());
   }, [dispatch]);
 
+  //get products
   useEffect(() => {
     dispatch(actions.getProducts.getProductsRequest());
     // const getProducts = async () => {
@@ -51,35 +51,6 @@ export function Products() {
     // };
     // getProducts();
   }, [dispatch]);
-
-  const onClose = React.useCallback(() => {
-    dispatch(hideModal());
-  }, [dispatch]);
-  const Loading = () => {
-    return (
-      <>
-        <div style={{ margin: "16px" }}>
-          <Row gutter={[8, 8]} style={{ justifyContent: "center" }}>
-            <Col span={4} style={{ margin: "17px" }}>
-              <Skeleton width={240} height={380} />
-            </Col>
-            <Col span={4} style={{ margin: "17px" }}>
-              <Skeleton width={240} height={380} />
-            </Col>
-            <Col span={4} style={{ margin: "17px" }}>
-              <Skeleton width={240} height={380} />
-            </Col>
-            <Col span={4} style={{ margin: "17px" }}>
-              <Skeleton width={240} height={380} />
-            </Col>
-            <Col span={4} style={{ margin: "17px" }}>
-              <Skeleton width={240} height={380} />
-            </Col>
-          </Row>
-        </div>
-      </>
-    );
-  };
 
   // const FilterProducts = (cate) => {
   //   const updateProducts = data.filter((x) => x.category === cate);
@@ -178,7 +149,7 @@ export function Products() {
     );
   };
   return (
-    <>
+    <main>
       <Layout style={{ background: "white" }}>
         <Button
           onClick={() => openCreateProdModal()}
@@ -189,9 +160,10 @@ export function Products() {
 
         <CreateProdModal />
         <div style={{ margin: "0 auto" }}>
-          {loading ? <Loading /> : <ShowProducts />}
+          <ShowProducts />
         </div>
       </Layout>
-    </>
+    </main>
   );
 }
+export { Products };

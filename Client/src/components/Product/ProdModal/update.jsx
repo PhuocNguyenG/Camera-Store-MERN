@@ -30,6 +30,7 @@ export function UpdateProduct() {
 
   const [disable, setDisable] = React.useState(false);
   const product = useSelector(productDetailState$);
+  
   const updateProd = (product) => {
     setDisable(true);
     dispatch(updateProduct.updateProductRequest(product));
@@ -39,7 +40,7 @@ export function UpdateProduct() {
     }
     delays();
   };
-  
+
   function timeout(delay) {
     return new Promise((res) => setTimeout(res, delay));
   }
@@ -104,7 +105,6 @@ export function UpdateProduct() {
                     }}
                     defaultValue={product.prodCate}
                   >
-
                     <Select.Option value="Máy ảnh">Máy ảnh</Select.Option>
                     <Select.Option value="Máy quay phim">
                       Máy quay phim
@@ -178,12 +178,12 @@ export function UpdateProduct() {
   };
 
   return (
-    <>
+    <main>
       <div>
         <Layout style={{ paddingTop: "20px", background: "rgb(247 247 247)" }}>
           <UpdateProduct />
         </Layout>
       </div>
-    </>
+    </main>
   );
 }

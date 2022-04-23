@@ -7,6 +7,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { userRoute, prodRoute } from "./router/index";
 import ErrorHandler from "./middlewares/ErrorHandle";
+import UserHandler from "./middlewares/UserHandler";
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ app.use(function (req, res, next) {
   next();
 });
 const PORT = process.env.APP_PORT || 5000;
+
 dbConnect();
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
@@ -38,5 +40,5 @@ app.use(
 
 // app.use(ErrorHandler);
 
-app.use("/user", userRoute);
+app.use("/user", UserHandler,userRoute);
 app.use("/product", prodRoute);

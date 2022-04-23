@@ -8,15 +8,18 @@ import { Button, Col, Layout, Row } from "antd";
 import ButtonGroup from "antd/lib/button/button-group";
 import { addCart, delCart } from "../redux/action";
 
-export function Cart() {
+function Cart() {
   const state = useSelector((state) => state.handleCart);
   const dispatch = useDispatch();
+
   const handleAdd = (item) => {
     dispatch(addCart(item));
   };
+
   const handleDell = (item) => {
     dispatch(delCart(item));
   };
+
   const emptyCart = () => {
     return (
       <>
@@ -39,13 +42,13 @@ export function Cart() {
             marginBottom: "10px",
             border: "1px solid black",
             width: "fit-content",
-            margin:"5px auto"
+            margin: "5px auto",
           }}
         >
-          <Col span={6} style={{width: "200px",
-                  height: "200px" }}>
-            <div style={{width: "200px",
-                  height: "200px", textAlign: "center" }}>
+          <Col span={6} style={{ width: "200px", height: "200px" }}>
+            <div
+              style={{ width: "200px", height: "200px", textAlign: "center" }}
+            >
               <img
                 style={{
                   width: "200px",
@@ -57,7 +60,10 @@ export function Cart() {
               />
             </div>
           </Col>
-          <Col span={10} style={{width:"700px", alignSelf: "center", textAlign: "center" }}>
+          <Col
+            span={10}
+            style={{ width: "700px", alignSelf: "center", textAlign: "center" }}
+          >
             <div className="item-cart-title">{product.prodName}</div>
             <div className="item-cart-category">
               <a>Loại: </a>
@@ -65,7 +71,7 @@ export function Cart() {
             </div>
 
             <NumberFormat
-              value={(product.prodPrice) }
+              value={product.prodPrice}
               className="item-cart-price"
               thousandSeparator={true}
               displayType={"text"}
@@ -89,7 +95,7 @@ export function Cart() {
               </Button>
             </ButtonGroup>
             <NumberFormat
-              value={(product.qty * product.prodPrice)}
+              value={product.qty * product.prodPrice}
               className="item-cart-sump"
               thousandSeparator={true}
               displayType={"text"}
@@ -115,19 +121,15 @@ export function Cart() {
   const buttons = () => {
     return (
       <>
-        <Row style={{marginBottom:"50px"}}>
+        <Row style={{ marginBottom: "50px" }}>
           <Col span={5} style={{ marginLeft: "auto" }}>
-            <div style={{fontSize:"25px"}}>Tổng tiền:</div>
+            <div style={{ fontSize: "25px" }}>Tổng tiền:</div>
             <NumberFormat
               value={sumPrice}
               className="item-cart-price"
               thousandSeparator={true}
               displayType={"text"}
-              renderText={(value, props) => (
-                <div {...props}>
-                  {value} VNĐ
-                </div>
-              )}
+              renderText={(value, props) => <div {...props}>{value} VNĐ</div>}
             />
             <NavLink to={"/thanh-toan"}>
               <Button className="btnAdd-product-detail">Thanh toán</Button>
@@ -139,7 +141,7 @@ export function Cart() {
   };
   return (
     <>
-      <Layout style={{ paddingTop: "20px", background: "rgb(247 247 247)" }}>
+      <Layout style={{ paddingTop: "20px", background: "#ffffff" }}>
         {state.length === 0 && emptyCart()}
         {state.length !== 0 && state.map(cartItem)}
         {state.length !== 0 && buttons()}
@@ -147,3 +149,4 @@ export function Cart() {
     </>
   );
 }
+export { Cart };

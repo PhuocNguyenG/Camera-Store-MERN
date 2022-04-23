@@ -11,10 +11,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import * as api from "../api";
 
-export function Product() {
+function Product() {
   const id = useParams();
-  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [admin, setAdmin] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [img, setImg] = useState([]);
@@ -23,57 +23,58 @@ export function Product() {
     dispatch(addCart(product));
   };
 
+  //delete product
   const delProduct = (id) => {
     dispatch(actions.delProduct.delProductRequest(id));
     navigate("/san-pham");
   };
+
+  //get single-product
   useEffect(() => {
     dispatch(actions.getProductDetail.getProductDetailRequest(id));
-    // const getProduct = async () => {
-    // setLoading(true);
-
-    // setLoading(false);
-    // };
-    // getProduct();
   }, [dispatch]);
+
+  //
+  const cookLogin = sessionStorage.getItem("_tokenlg");
+  const now = new Date();
+  const item = JSON.parse(cookLogin);
+  useEffect(() => {
+    if (cookLogin == null || now.getTime() > item.expiry) {
+      setAdmin(false);
+    } else {
+      setAdmin(true);
+    }
+    console.log(admin);
+  }, []);
   // console.log(product);
-  //anim loading
-  const Loading = () => {
+
+  const OptionsForAdmin = () => {
     return (
       <>
-        <Row gutter={[8, 8]}>
-          <Col span={14}>
-            <div style={{ minHeight: "100vh", padding: "8px" }}>
-              <Row gutter={[8, 8]}>
-                <Col span={12}>
-                  <Skeleton height={400} width={418} />
-                </Col>
-                <Col span={12}>
-                  <Skeleton height={400} width={418} />
-                </Col>
-                <Col span={12}>
-                  <Skeleton height={400} width={418} />
-                </Col>
-                <Col span={12}>
-                  <Skeleton height={400} width={418} />
-                </Col>
-              </Row>
-            </div>
-          </Col>
-          <Col span={10} style={{ background: "white" }}>
-            <div style={{ padding: "8px" }}>
-              <Skeleton height={50} width={500} />
-              <Skeleton height={50} width={200} />
-              <Skeleton height={200} width={500} />
-              <div className="price-product-detail">
-                <Skeleton height={50} width={200} />
-              </div>
-            </div>
-          </Col>
-        </Row>
+        <div>
+          <NavLink to={`/san-pham/cap-nhat/${product._id}`}>
+            <Button
+              className="btnAdd-product-detail"
+              style={{ float: "right" }}
+            >
+              Cập nhật sản phẩm
+            </Button>
+          </NavLink>
+        </div>
+        <div className="clearfix"></div>
+        <div>
+          <Button
+            className="btnAdd-product-detail"
+            onClick={() => delProduct(product._id)}
+            style={{ float: "right" }}
+          >
+            Xóa sản phẩm
+          </Button>
+        </div>
       </>
     );
   };
+
   const ShowProduct = () => {
     setImg(product.prodPicture);
     return (
@@ -117,11 +118,12 @@ export function Product() {
               <div className="description-product-detail">
                 {product.prodDesc}
               </div>
-              <Input.TextArea className="description-product-detail"
-              value={product.prodDesc}
-              bordered={false}
-              autoSize={true}
-              readOnly={true}
+              <Input.TextArea
+                className="description-product-detail"
+                value={product.prodDesc}
+                bordered={false}
+                autoSize={true}
+                readOnly={true}
               />
 
               <NumberFormat
@@ -138,26 +140,7 @@ export function Product() {
                 Thêm vào giỏ hàng
               </Button>
             </div>
-            <div>
-              <NavLink to={`/san-pham/cap-nhat/${product._id}`}>
-                <Button
-                  className="btnAdd-product-detail"
-                  style={{ float: "right" }}
-                >
-                  Cập nhật sản phẩm
-                </Button>
-              </NavLink>
-            </div>
-            <div className="clearfix"></div>
-            <div>
-              <Button
-                className="btnAdd-product-detail"
-                onClick={() => delProduct(product._id)}
-                style={{ float: "right" }}
-              >
-                Xóa sản phẩm
-              </Button>
-            </div>
+            {admin ? <OptionsForAdmin /> : null}
           </Col>
         </Row>
       </div>
@@ -165,12 +148,13 @@ export function Product() {
   };
 
   return (
-    <>
+    <main>
       <div>
         <Layout style={{ paddingTop: "20px", background: "rgb(247 247 247)" }}>
-          {loading ? <Loading /> : <ShowProduct />}
+          <ShowProduct />
         </Layout>
       </div>
-    </>
+    </main>
   );
 }
+export { Product };

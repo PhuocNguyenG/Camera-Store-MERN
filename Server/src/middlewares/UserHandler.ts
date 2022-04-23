@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from "express";
 
-export default function ErrorHandler(
+export default function UserHandler(
   req: Request,
   res: Response,
   next: NextFunction
@@ -8,7 +8,7 @@ export default function ErrorHandler(
   const data = req.body;
 
   if (!data) {
-    res.status(404).json({ err: "Page not Found" });
+    res.status(401).json({ err: "Data is null" });
   }
   next();
 }

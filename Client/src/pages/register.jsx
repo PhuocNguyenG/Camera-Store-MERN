@@ -14,6 +14,8 @@ import {
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 const { Option } = Select;
+
+//setting layout form
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -32,19 +34,8 @@ const formItemLayout = {
     },
   },
 };
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 16,
-      offset: 0,
-    },
-  },
-};
-export function Register() {
+
+function Register() {
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -60,6 +51,8 @@ export function Register() {
       [name]: value,
     });
   };
+
+  //form select country calling code
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select style={{ width: 70 }}>
@@ -67,6 +60,8 @@ export function Register() {
       </Select>
     </Form.Item>
   );
+  const [form] = Form.useForm();
+
   const onFinish = () => {
     axios
       .post("http://localhost:5000/user/register", user)
@@ -79,10 +74,8 @@ export function Register() {
       });
   };
 
-  const [form] = Form.useForm();
-
   return (
-    <>
+    <main>
       <Layout style={{ height: "100vh", margin: "auto" }}>
         <Row justify={"center"} style={{ marginTop: "30px" }}>
           <div className="box-register">
@@ -236,6 +229,7 @@ export function Register() {
           </div>
         </Row>
       </Layout>
-    </>
+    </main>
   );
 }
+export { Register };
