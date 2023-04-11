@@ -2,9 +2,9 @@
 
 ## Member
  --------------
-  1. Nguyễn Đình Gia Huy
-  2. Nguyễn Hoàng Anh Phước
-  3. Nguyễn Tuấn Kiệt
+  1. Nguyễn Đình Gia Huy (main BE)
+  2. Nguyễn Hoàng Anh Phước (main FE)
+  3. Nguyễn Tuấn Kiệt (sub BE)
   4. Nguyễn Huỳnh Thanh Tân
   5. Nguyễn Huỳnh Việt Tiến
 
